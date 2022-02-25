@@ -5,6 +5,8 @@ function populateFields(username){
     xhr.open('GET', url, true);
     // parsing through the request
     let listOfTitles = [];
+
+    // count so that, api limit don't reach faster than usual
     xhr.onload = function() {
         const data = JSON.parse(this.response);
         // console.log(data);
@@ -32,7 +34,8 @@ function populateFields(username){
             
             makeItCollapsible(newRepo);
             projectList.appendChild(repoContent);
-            // break;
+            
+            break;
         }
         drawMainChart(username, listOfTitles);
     }
@@ -82,6 +85,10 @@ function drawMainChart(userURL, listOfRepo){
     const xhrLan = new XMLHttpRequest();
     console.log(listOfRepo);
 
+    // graph data
+    let lans = [];
+    let numbers = [];
+
     for(const eachRepo of listOfRepo){
         const urlLan = `https://api.github.com/repos/${userURL}/${eachRepo}/languages`;
         console.log(urlLan);
@@ -89,17 +96,22 @@ function drawMainChart(userURL, listOfRepo){
 
         xhrLan.onload = function() {
             let languagesList = JSON.parse(this.response);
-            console.log("list of languages");
-            console.log(languagesList);
+            // console.log("list of languages");
+            // console.log(languagesList);
             
             // for(const [key, value] of languagesList)
             //     console.log();
 
             // looping through fields in an object
+            
             for (const index in languagesList) {
-                console.log("pring from for in loop");
-                console.log(`${index}: ${languagesList[index]}`);
+                lans.push(index);
+                numbers.push(languagesList[index]);
+                // console.log(`${index}: ${languagesList[index]}`);
             }
+            console.log("parsed results");
+            console.log(lans);
+            console.log(numbers);
         }
         xhrLan.send();
     }
