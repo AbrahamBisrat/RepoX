@@ -97,18 +97,6 @@ function drawMainChart(userURL, listOfRepo){
     console.log("repositories list");
     console.log(listOfRepo);
 
-    // function fOne(_callback){
-    //     console.log("neo");
-    //     _callback();
-    // }
-    // function fTwo(){
-    //     console.log("wot");
-    //     fOne(() => {
-    //         console.log("the real two");
-    //     });
-    // }
-
-
     for(const eachRepo of listOfRepo){
 
         const urlLan = `https://api.github.com/repos/${userURL}/${eachRepo}/languages`;
@@ -135,9 +123,6 @@ function drawMainChart(userURL, listOfRepo){
             console.log("nums : " + numbers);
         };
 
-        // console.log("parsed results");
-        // console.log(lans);
-        // console.log(numbers);
         xhrLan.send();
     }
     
