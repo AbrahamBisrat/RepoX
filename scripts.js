@@ -7,6 +7,8 @@ function populateFields(username){
     let listOfTitles = [];
 
     // count so that, api limit don't reach faster than usual
+    let count = 1;
+
     xhr.onload = function() {
         const data = JSON.parse(this.response);
         // console.log(data);
@@ -35,8 +37,10 @@ function populateFields(username){
             makeItCollapsible(newRepo);
             projectList.appendChild(repoContent);
             
-            break;
+            if(count++ > 2)
+                break;
         }
+        // callbacks
         drawMainChart(username, listOfTitles);
     }
     xhr.send();
@@ -83,36 +87,57 @@ function makeItCollapsible(thisOne){
 function drawMainChart(userURL, listOfRepo){
     const ctx = document.getElementById('user-languages');
     const xhrLan = new XMLHttpRequest();
-    console.log(listOfRepo);
+    // console.log(listOfRepo);
 
+    
     // graph data
     let lans = [];
     let numbers = [];
+    
+    console.log("repositories list");
+    console.log(listOfRepo);
+
+    // function fOne(_callback){
+    //     console.log("neo");
+    //     _callback();
+    // }
+    // function fTwo(){
+    //     console.log("wot");
+    //     fOne(() => {
+    //         console.log("the real two");
+    //     });
+    // }
+
 
     for(const eachRepo of listOfRepo){
+
         const urlLan = `https://api.github.com/repos/${userURL}/${eachRepo}/languages`;
-        console.log(urlLan);
-        xhrLan.open('GET', urlLan, true);
+        // console.log(urlLan);
+        xhrLan.open('GET', urlLan, false);
+        // Important note
+        // xhr('method', 'url', 'async')
+        // set async to false to get all the responses, instead
+        // of just the last request.
+
+        console.log("working on : " + eachRepo);
 
         xhrLan.onload = function() {
+            console.log("raw response");
+            console.log(this.response);
+            // localStorage.clear(); // clear memory of the previous request
             let languagesList = JSON.parse(this.response);
-            // console.log("list of languages");
-            // console.log(languagesList);
-            
-            // for(const [key, value] of languagesList)
-            //     console.log();
-
-            // looping through fields in an object
-            
             for (const index in languagesList) {
                 lans.push(index);
                 numbers.push(languagesList[index]);
                 // console.log(`${index}: ${languagesList[index]}`);
-            }
-            console.log("parsed results");
-            console.log(lans);
-            console.log(numbers);
-        }
+            }// this should excute syncronously
+            console.log("lans : " + lans);
+            console.log("nums : " + numbers);
+        };
+
+        // console.log("parsed results");
+        // console.log(lans);
+        // console.log(numbers);
         xhrLan.send();
     }
     
@@ -120,6 +145,9 @@ function drawMainChart(userURL, listOfRepo){
     let labelData = [40, 30, 20, 10, 2, 7];
 
     const mainChart = chartMain(ctx, labels, labelData);
+
+    // callbacks
+    // _callback();
 }
 function chartMain(ctx, labels, labelData) {
     return new Chart(ctx, {
