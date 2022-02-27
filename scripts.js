@@ -95,36 +95,29 @@ function drawMainChart(userURL, listOfRepo){
     let graphData = new Map();
 
     for(const eachRepo of listOfRepo){
-
         const urlLan = `https://api.github.com/repos/${userURL}/${eachRepo}/languages`;
         xhrLan.open('GET', urlLan, false);
         // xhr('method', 'url', 'async')
-        // set async to false to get all the responses, instead
-        // of just the last request.
-
+        // set async to false to get all the responses, instead of just the last request.
+        
         console.log("working on : " + eachRepo);
-
         xhrLan.onload = function() {
             let languagesList = JSON.parse(this.response);
             for (const index in languagesList) {
+                if(graphData.get(index) == undefined){
+                    let temp = graphData.get(index);
+                    graphData.set(index, temp + languagesList[index]);
+                    console.log(index + " : appended result");
+                }
                 graphData.set(index, languagesList[index]);
             }
-            console.log("Graph Data");
-            console.log("key value pair");
-            for(let key of graphData.keys())
-                console.log(key + " : " + graphData.get(key));
         };
-
+        console.log("\n key value pair");
+        for(let key of graphData.keys())
+            console.log(key + " : " + graphData.get(key) + "\n");
         xhrLan.send();
     }
     
-    // let labels = ['Java', 'JS', 'CSS', 'HTML', 'C++', 'SCSS'];
-    // let labelData = [40, 30, 20, 10, 2, 7];
-    
-    console.log("Final graph Data : ");
-    for(let key of graphData.keys())
-        console.log(key + " : " + graphData.get(key));
-
     let labels = [];
     for(let key of graphData.keys())
         labels.push(key);
