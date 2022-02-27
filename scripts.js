@@ -87,22 +87,17 @@ function makeItCollapsible(thisOne){
 function drawMainChart(userURL, listOfRepo){
     const ctx = document.getElementById('user-languages');
     const xhrLan = new XMLHttpRequest();
-    // console.log(listOfRepo);
-
     
-    // graph data
-    let lans = [];
-    let numbers = [];
-    
-    console.log("repositories list");
+    console.log("repositories");
     console.log(listOfRepo);
+    
+    // hashMap for the graph values
+    let graphData = new Map();
 
     for(const eachRepo of listOfRepo){
 
         const urlLan = `https://api.github.com/repos/${userURL}/${eachRepo}/languages`;
-        // console.log(urlLan);
         xhrLan.open('GET', urlLan, false);
-        // Important note
         // xhr('method', 'url', 'async')
         // set async to false to get all the responses, instead
         // of just the last request.
@@ -110,29 +105,34 @@ function drawMainChart(userURL, listOfRepo){
         console.log("working on : " + eachRepo);
 
         xhrLan.onload = function() {
-            console.log("raw response");
-            console.log(this.response);
-            // localStorage.clear(); // clear memory of the previous request
             let languagesList = JSON.parse(this.response);
             for (const index in languagesList) {
-                lans.push(index);
-                numbers.push(languagesList[index]);
-                // console.log(`${index}: ${languagesList[index]}`);
-            }// this should excute syncronously
-            console.log("lans : " + lans);
-            console.log("nums : " + numbers);
+                graphData.set(index, languagesList[index]);
+            }
+            console.log("Graph Data");
+            console.log("key value pair");
+            for(let key of graphData.keys())
+                console.log(key + " : " + graphData.get(key));
         };
 
         xhrLan.send();
     }
     
-    let labels = ['Java', 'JS', 'CSS', 'HTML', 'C++', 'SCSS'];
-    let labelData = [40, 30, 20, 10, 2, 7];
+    // let labels = ['Java', 'JS', 'CSS', 'HTML', 'C++', 'SCSS'];
+    // let labelData = [40, 30, 20, 10, 2, 7];
+    
+    console.log("Final graph Data : ");
+    for(let key of graphData.keys())
+        console.log(key + " : " + graphData.get(key));
+
+    let labels = [];
+    for(let key of graphData.keys())
+        labels.push(key);
+    let labelData = [];
+    for(let value of graphData.values())
+        labelData.push(value);
 
     const mainChart = chartMain(ctx, labels, labelData);
-
-    // callbacks
-    // _callback();
 }
 function chartMain(ctx, labels, labelData) {
     return new Chart(ctx, {
