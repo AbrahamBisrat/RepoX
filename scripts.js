@@ -1,12 +1,13 @@
 function populateFields(username){
+    let name = document.querySelector("#avatar-name");
+    name.innerText = "@" + username;
+    // fetch avatar image from api here
+
     const xhr = new XMLHttpRequest();
     const url = `https://api.github.com/users/${username}/repos`;
 
     xhr.open('GET', url, true);
-    // parsing through the request
     let listOfTitles = [];
-
-    // count so that, api limit don't reach faster than usual
     let count = 1;
 
     xhr.onload = function() {
@@ -19,28 +20,20 @@ function populateFields(username){
             const eachDesc = data[i].description;
             const eachUrl = data[i].html_url;
             const eachLanguage = data[i].language;
-            // console.log("built with " + eachLanguage);
-            // languagesList.push(eachLanguage);
-
+            
             const hasPages = data[i].hasPages;
-
-            // add to the repo name list
             listOfTitles.push(eachTitle);
             // if hasPages is true add a link to it.
 
-            // repo button
             const newRepo = repoButtonMaker(eachTitle, eachDesc, eachLanguage, projectList);
-            
-            // details within the repo (collapsibles)
             const repoContent = repoContentMaker(eachUrl);
             
             makeItCollapsible(newRepo);
             projectList.appendChild(repoContent);
             
-            if(count++ > 2)
+            if(count++ > 2) // api call limit hack
                 break;
         }
-        // callbacks
         drawMainChart(username, listOfTitles);
     }
     xhr.send();
@@ -50,7 +43,6 @@ function repoButtonMaker(eachTitle, eachDesc, eachLanguage, projectList) {
     newRepo.type = "button";
     newRepo.className = "collapsible";
     newRepo.innerText = eachTitle;
-    // console.log("language :  " + eachLanguage);
     newRepo.innerText += " -> " + eachLanguage
     if (eachDesc != null)
         newRepo.innerText += " : " + eachDesc;
@@ -73,14 +65,10 @@ function makeItCollapsible(thisOne){
     thisOne.addEventListener('click', function(){
             thisOne.classList.toggle("active");
             var content = this.nextElementSibling;
-            
-            // toggle visiblity
             if(content.style.maxHeight){
                 content.style.maxHeight = null;
-                console.log("clicked off");
             } else {
                 content.style.maxHeight = content.scrollHeight + "px";
-                console.log("clicked on");
             }
     });
 }
@@ -91,14 +79,12 @@ function drawMainChart(userURL, listOfRepo){
     console.log("repositories");
     console.log(listOfRepo);
     
-    // hashMap for the graph values
     let graphData = new Map();
-
     for(const eachRepo of listOfRepo){
-        const urlLan = `https://api.github.com/repos/${userURL}/${eachRepo}/languages`;
-        xhrLan.open('GET', urlLan, false);
         // xhr('method', 'url', 'async')
         // set async to false to get all the responses, instead of just the last request.
+        const urlLan = `https://api.github.com/repos/${userURL}/${eachRepo}/languages`;
+        xhrLan.open('GET', urlLan, false);
         
         console.log("working on : " + eachRepo);
         xhrLan.onload = function() {
@@ -163,14 +149,12 @@ function chartMain(ctx, labels, labelData) {
         }
     });
 }
-
-// oh Java, I miss you already
 // public static void main ... lol
 // let githubUser = 'okalu';
 let githubUser = 'abrahammehari';
 populateFields(githubUser);
 
-// make use of bubbling of DOM elements
+// make use of bubbling property of DOM elements
 
-// to work around "api call limit", limit requests to only one.
-// once the whole logic is working, OAuth can be added.
+// to work around api call limit, limit requests to only one.
+// once the entire logic is working, OAuth can be added.
