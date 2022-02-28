@@ -14,25 +14,25 @@ function populateFields(username){
         const data = JSON.parse(this.response);
         // console.log(data);
         const projectList = document.querySelector(".api-data");
-        let languagesList = [];
         for(let i in data){
             const eachTitle = data[i].name;
             const eachDesc = data[i].description;
             const eachUrl = data[i].html_url;
             const eachLanguage = data[i].language;
-            
-            const hasPages = data[i].hasPages;
-            listOfTitles.push(eachTitle);
             // if hasPages is true add a link to it.
+            const hasPages = data[i].has_pages;
+            console.log("has_pages : " + hasPages);
+
+            listOfTitles.push(eachTitle);
 
             const newRepo = repoButtonMaker(eachTitle, eachDesc, eachLanguage, projectList);
-            const repoContent = repoContentMaker(eachUrl);
+            const repoContent = repoContentMaker(eachUrl, true, username, eachTitle);
             
             makeItCollapsible(newRepo);
             projectList.appendChild(repoContent);
             
-            // if(count++ > 2) // api call limit hack
-            //     break;
+            if(count++ > 2) // api call limit hack
+                break;
         }
         drawMainChart(username, listOfTitles);
     }
@@ -49,7 +49,7 @@ function repoButtonMaker(eachTitle, eachDesc, eachLanguage, projectList) {
     projectList.appendChild(newRepo);
     return newRepo;
 }
-function repoContentMaker(eachUrl) {
+function repoContentMaker(eachUrl, hasPages, username, hostedPage) {
     const repoContent = document.createElement('div');
     repoContent.className = 'repo-content';
     const repoLink = document.createElement('a');
@@ -59,6 +59,14 @@ function repoContentMaker(eachUrl) {
     trial.textContent = "Graphs and details about the repo";
     repoContent.appendChild(trial);
     repoContent.appendChild(repoLink);
+    if(hasPages){
+        console.log("haspages")
+        const pagesLink = document.createElement('a');
+        pagesLink.href = `https://${username}.github.io/${hostedPage}/`;
+        // https://username.github.io/repo-name/
+        pagesLink.innerText = "Go to Deployed page";
+        repoContent.appendChild(pagesLink);
+    }
     return repoContent;
 }
 function makeItCollapsible(thisOne){
@@ -106,6 +114,12 @@ function drawMainChart(userURL, listOfRepo){
         xhrLan.send();
     }
     
+    // mapping data to percentage
+    let lanTotal = 0;
+    for(let val of graphData.values())
+        lanTotal += Number(val);
+    for(let key of graphData.keys())
+        graphData.set(key, (graphData.get(key) / lanTotal) * 100);
     let labels = [];
     for(let key of graphData.keys())
         labels.push(key);
@@ -153,8 +167,7 @@ function chartMain(ctx, labels, labelData) {
 }
 // public static void main ... lol
 // let githubUser = 'okalu';
-// let githubUser = 'abrahammehari';
-let githubUser = 'okonnu'
+let githubUser = 'abrahammehari';
 populateFields(githubUser);
 
 // make use of bubbling property of DOM elements
