@@ -16,10 +16,12 @@ body > * {
     display: flex;
     flex-wrap: wrap;
     /* flex: 1; */
+    /* justify-content: center; */
     border-radius: 3px 3px 3px 3px;
 }
 #avatar{
-    height: 20vh;
+    width: 20%;
+    min-width: 150px;
     /* flex-shrink: 1; */
     border-radius: 2px;
     order: -1;
@@ -27,8 +29,11 @@ body > * {
 #avatar-name{
     font-family: monospace;
     color: rgb(0, 0, 0);
-    font-size: 600%;
+    /* font-size: 600%; */
+    font-size: 5vw;
     margin: 2vw;
+    display: grid;
+    place-content: center;
 }
 .footer{
     padding: .3vh 5vw;
@@ -91,7 +96,7 @@ h3{
     font-size: 15px;
     box-shadow: 0px 0px 2px rgb(102, 101, 101);
     border-radius: 2px;
-    margin: 2px;
+    margin: .5vh
 }
 /* Add a background color to the button 
 if it is clicked on 
@@ -100,9 +105,11 @@ if it is clicked on
     background-color: #ccc;
 }
 .repo-content{
+    margin-top: -.45%;
+    width: 100%;
     padding: 0px 18px;
     overflow: hidden;
-    background-color: #f1f1f1;
+    background-color: #6f9cb1;
     max-height: 0px;
     transition: max-height 0.2s ease-out;
 }
@@ -123,3 +130,11 @@ if it is clicked on
 /* style the repo names
    languages built with
  */
+.repo-content a{
+    color: rgb(38, 69, 110);
+    border-radius: 5%;
+    padding: 1%;
+}
+.repo-content a:hover{
+    background-color: rgba(57, 82, 50, 0.76);
+}

@@ -2,6 +2,8 @@ function populateFields(username){
     let name = document.querySelector("#avatar-name");
     name.innerText = "@" + username;
     // fetch avatar image from api here
+    // document.getElementById("avatar").src = source of the image url ;
+    // more feature to display follower and following numbers
 
     const xhr = new XMLHttpRequest();
     const url = `https://api.github.com/users/${username}/repos`;
@@ -12,26 +14,25 @@ function populateFields(username){
 
     xhr.onload = function() {
         const data = JSON.parse(this.response);
-        // console.log(data);
         const projectList = document.querySelector(".api-data");
         for(let i in data){
             const eachTitle = data[i].name;
-            const eachDesc = data[i].description;
             const eachUrl = data[i].html_url;
-            const eachLanguage = data[i].language;
             // if hasPages is true add a link to it.
             const hasPages = data[i].has_pages;
             console.log("has_pages : " + hasPages);
-
             listOfTitles.push(eachTitle);
-
-            const newRepo = repoButtonMaker(eachTitle, eachDesc, eachLanguage, projectList);
-            const repoContent = repoContentMaker(eachUrl, true, username, eachTitle);
-            
+            const newRepo = repoButtonMaker(
+                data[i].name,
+                data[i].description,
+                data[i].language,
+                projectList
+            );
+            const repoContent = repoContentMaker(eachUrl, hasPages, username, eachTitle);
             makeItCollapsible(newRepo);
             projectList.appendChild(repoContent);
             
-            if(count++ > 2) // api call limit hack
+            if(count++ > 1) // api call limit hack
                 break;
         }
         drawMainChart(username, listOfTitles);
@@ -49,20 +50,23 @@ function repoButtonMaker(eachTitle, eachDesc, eachLanguage, projectList) {
     projectList.appendChild(newRepo);
     return newRepo;
 }
-function repoContentMaker(eachUrl, hasPages, username, hostedPage) {
+function repoContentMaker(eachUrl, hasPages, username, title) {
     const repoContent = document.createElement('div');
     repoContent.className = 'repo-content';
     const repoLink = document.createElement('a');
     repoLink.href = eachUrl;
     repoLink.innerText = "Goto repository";
-    const trial = document.createElement('h1');
-    trial.textContent = "Graphs and details about the repo";
-    repoContent.appendChild(trial);
+    // const trial = document.createElement('h1');
+    // trial.textContent = "Graphs and details about the repo";
+    const graphContainer = document.createElement('div');
+    graphContainer.setAttribute('id', title);
+    // repoContent.appendChild(trial);
+    repoContent.appendChild(graphContainer)
     repoContent.appendChild(repoLink);
     if(hasPages){
         console.log("haspages")
         const pagesLink = document.createElement('a');
-        pagesLink.href = `https://${username}.github.io/${hostedPage}/`;
+        pagesLink.href = `http://${username}.github.io/${title}/`;
         // https://username.github.io/repo-name/
         pagesLink.innerText = "Go to Deployed page";
         repoContent.appendChild(pagesLink);
@@ -99,7 +103,9 @@ function drawMainChart(userURL, listOfRepo){
         xhrLan.onload = function() {
             let languagesList = JSON.parse(this.response);
             console.log(languagesList);
+            let eachGraph = new Map();
             for (const index in languagesList) {
+                eachGraph.set(index, Number(languagesList[index]));
                 if(graphData.get(index) !== undefined){
                     let temp = Number(graphData.get(index)) + Number(languagesList[index]);
                     console.log(index + " : appended result : " + temp);
@@ -108,9 +114,11 @@ function drawMainChart(userURL, listOfRepo){
                 } // if key already exists, add to the value
                 graphData.set(index, languagesList[index]);
             }
+            // append chart to each element
+            drawEachGraph(eachRepo, eachGraph);
         };
-        for(let key of graphData.keys())
-            console.log(key + " : " + graphData.get(key) + "\n");
+        // for(let key of graphData.keys())
+        //     console.log(key + " : " + graphData.get(key) + "\n");
         xhrLan.send();
     }
     
@@ -127,15 +135,26 @@ function drawMainChart(userURL, listOfRepo){
     for(let value of graphData.values())
         labelData.push(value);
 
-    const mainChart = chartMain(ctx, labels, labelData);
+    const mainChart = chartData(ctx, labels, labelData, 'language breakdown');
 }
-function chartMain(ctx, labels, labelData) {
+function drawEachGraph(eachRepo, eachGraph) {
+    const container = document.querySelector(`#${eachRepo}`);
+
+    const details = document.createElement('p');
+    for (let key of eachGraph.keys()) {
+        console.log("e: " + key + "  :  " + eachGraph.get(key));
+        details.innerText += key + "  :  " + eachGraph.get(key) + "\n";
+    }
+    container.appendChild(details);
+}
+
+function chartData(ctx, labels, labelData, title) {
     return new Chart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
             datasets: [{
-                label: 'Language breakdown',
+                label: title,
                 data: labelData,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.8)',
@@ -168,6 +187,9 @@ function chartMain(ctx, labels, labelData) {
 // public static void main ... lol
 // let githubUser = 'okalu';
 let githubUser = 'abrahammehari';
+// let githubUser = 'SagarNepali';
+
+// let githubUser = 'okonnu';
 populateFields(githubUser);
 
 // make use of bubbling property of DOM elements
