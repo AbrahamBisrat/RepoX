@@ -31,8 +31,8 @@ function populateFields(username){
             makeItCollapsible(newRepo);
             projectList.appendChild(repoContent);
             
-            if(count++ > 2) // api call limit hack
-                break;
+            // if(count++ > 2) // api call limit hack
+            //     break;
         }
         drawMainChart(username, listOfTitles);
     }
@@ -80,25 +80,27 @@ function drawMainChart(userURL, listOfRepo){
     console.log(listOfRepo);
     
     let graphData = new Map();
+    let counting = 1;
     for(const eachRepo of listOfRepo){
         // xhr('method', 'url', 'async')
         // set async to false to get all the responses, instead of just the last request.
         const urlLan = `https://api.github.com/repos/${userURL}/${eachRepo}/languages`;
         xhrLan.open('GET', urlLan, false);
         
-        console.log("working on : " + eachRepo);
+        console.log("\n\n " + counting++ + " working on : " + eachRepo);
         xhrLan.onload = function() {
             let languagesList = JSON.parse(this.response);
+            console.log(languagesList);
             for (const index in languagesList) {
-                if(graphData.get(index) == undefined){
-                    let temp = graphData.get(index);
-                    graphData.set(index, temp + languagesList[index]);
-                    console.log(index + " : appended result");
-                }
+                if(graphData.get(index) !== undefined){
+                    let temp = Number(graphData.get(index)) + Number(languagesList[index]);
+                    console.log(index + " : appended result : " + temp);
+                    graphData.set(index, temp);
+                    break;
+                } // if key already exists, add to the value
                 graphData.set(index, languagesList[index]);
             }
         };
-        console.log("\n key value pair");
         for(let key of graphData.keys())
             console.log(key + " : " + graphData.get(key) + "\n");
         xhrLan.send();
@@ -151,7 +153,8 @@ function chartMain(ctx, labels, labelData) {
 }
 // public static void main ... lol
 // let githubUser = 'okalu';
-let githubUser = 'abrahammehari';
+// let githubUser = 'abrahammehari';
+let githubUser = 'okonnu'
 populateFields(githubUser);
 
 // make use of bubbling property of DOM elements
