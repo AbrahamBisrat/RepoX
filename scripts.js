@@ -56,12 +56,14 @@ function repoContentMaker(eachUrl, hasPages, username, title) {
     const repoLink = document.createElement('a');
     repoLink.href = eachUrl;
     repoLink.innerText = "Goto repository";
-    // const trial = document.createElement('h1');
-    // trial.textContent = "Graphs and details about the repo";
     const graphContainer = document.createElement('div');
     graphContainer.setAttribute('id', title);
-    // repoContent.appendChild(trial);
-    repoContent.appendChild(graphContainer)
+    const canvas = document.createElement('canvas');
+    canvas.setAttribute('id', `${title}-canvas`);
+    canvas.setAttribute('width', '100%');
+    canvas.setAttribute('height', '100%');
+    graphContainer.appendChild(canvas);
+    repoContent.appendChild(graphContainer);
     repoContent.appendChild(repoLink);
     if(hasPages){
         console.log("haspages")
@@ -135,10 +137,11 @@ function drawMainChart(userURL, listOfRepo){
     for(let value of graphData.values())
         labelData.push(value);
 
-    const mainChart = chartData(ctx, labels, labelData, 'language breakdown');
+    const mainChart = chartData(ctx, labels, labelData, 'Language Breakdown');
 }
 function drawEachGraph(eachRepo, eachGraph) {
-    const container = document.querySelector(`#${eachRepo}`);
+    // graphContainer.setAttribute('id', `${title}-canvas`);
+    const container = document.querySelector(`#${eachRepo}-canvas`);
 
     const details = document.createElement('p');
     for (let key of eachGraph.keys()) {
@@ -146,11 +149,23 @@ function drawEachGraph(eachRepo, eachGraph) {
         details.innerText += key + "  :  " + eachGraph.get(key) + "\n";
     }
     container.appendChild(details);
+    
+    let eachGraphLangs = [];
+    let eachGraphPercentages = [];
+    for(let key of eachGraph.keys()){
+        eachGraphLangs.push(key);
+        eachGraphPercentages.push(eachGraph.get(key));
+    }
+    console.log("canvas : " + container);
+    console.log("Each chart data : ");
+    console.log(eachGraphLangs);
+    console.log(eachGraphPercentages);
+    const drawDetails = chartData(container, eachGraphLangs, eachGraphPercentages, 'Proportions')
 }
 
 function chartData(ctx, labels, labelData, title) {
     return new Chart(ctx, {
-        type: 'bar',
+        type: 'pie',
         data: {
             labels: labels,
             datasets: [{
