@@ -13,14 +13,12 @@ body > * {
     /* border: 2px dashed black; */
 }
 .header{
-    /* height: 20vh; */
     background-color: rgb(60, 101, 124);
     box-shadow: 10px 10px 20px black;
     display: flex;
     flex-wrap: wrap;
-    /* flex: 1; */
-    /* justify-content: center; */
     border-radius: 3px 3px 3px 3px;
+    display: none;
 }
 #avatar{
     width: 20%;
@@ -52,6 +50,7 @@ body > * {
     justify-content: space-around;
     position: relative;
     bottom: 0;
+    display: none;
 }
 .footer > *{
     font-size: small;
@@ -67,6 +66,12 @@ body > * {
     display: flex;
     flex-wrap: wrap;
     box-shadow: 0px 0px 20px black;
+}
+.api-data{
+    display: none;
+}
+#main-chart{
+    display: none;
 }
 .api-data > a,
 #listed-projects > li{

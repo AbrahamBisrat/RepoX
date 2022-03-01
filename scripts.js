@@ -1,3 +1,28 @@
+function doesThisUserExist(username){
+    const userXhr = new XMLHttpRequest();
+    // https://api.github.com/users/abrahammehari
+    // parse avatar_url from json -> this is the image address  
+    const userUrl = `https://api.github.com/users/${username}`;
+    userXhr.open('GET', userUrl, false); // do not perform this in async
+
+    userXhr.onload = function(){
+        const data = JSON.parse(this.response);
+        if(data['login'] != null){
+            // violla
+            console.log(username + " => user exists")
+            populateFields(username);
+        }else if (data['message'] === 'Not Found'){
+            // message: "Not Found"
+            // css tricks
+            console.log(username + "  => user doesn't exist")
+        }
+        else{
+            // Error 403 or other api denial
+            console.log("Aww, snap!\nSomething went wrong!");
+        }
+    }
+    userXhr.send();
+}
 function populateFields(username){
     grabUserAvatar(username);
     let name = document.querySelector("#avatar-name");
@@ -214,18 +239,14 @@ function chartData(ctx, labels, labelData, title) {
         }
     });
 }
-// public static void main ... lol
 // let githubUser = 'okalu';
 // let githubUser = 'SagarNepali';
 // let githubUser = 'okonnu';
 // let githubUser = 'abrahammehari';
-let githubUser = 'torvalds';
+// let githubUser = 'torvalds';
+let githubUser = 'meawfffff';
 
-populateFields(githubUser);
+// doesThisUserExist(githubUser);
 
 // make use of bubbling property of DOM elements
-
-// to work around api call limit, limit requests to only one.
 // once the entire logic is working, OAuth can be added.
-
-// grab the image from api and set it as a profile
