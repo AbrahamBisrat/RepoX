@@ -2,6 +2,9 @@
     font-family:Verdana, Geneva, Tahoma, sans-serif;
     box-shadow: 2px;
 }
+html{
+    height: 100vh;
+}
 body{
     background-color: rgb(219, 236, 240);
 }
@@ -47,6 +50,8 @@ body > * {
     flex: 1;
     flex-wrap: wrap;
     justify-content: space-around;
+    position: relative;
+    bottom: 0;
 }
 .footer > *{
     font-size: small;

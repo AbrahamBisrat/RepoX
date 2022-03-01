@@ -1,4 +1,5 @@
 function populateFields(username){
+    grabUserAvatar(username);
     let name = document.querySelector("#avatar-name");
     name.innerText = "@" + username;
     // fetch avatar image from api here
@@ -8,7 +9,7 @@ function populateFields(username){
     const xhr = new XMLHttpRequest();
     const url = `https://api.github.com/users/${username}/repos`;
 
-    xhr.open('GET', url, true);
+    xhr.open('GET', url, true); // async
     let listOfTitles = [];
     let count = 1;
 
@@ -32,12 +33,27 @@ function populateFields(username){
             makeItCollapsible(newRepo);
             projectList.appendChild(repoContent);
             
-            if(count++ > 1) // api call limit hack
+            if(count++ > 1) // api call limit
                 break;
         }
         drawMainChart(username, listOfTitles);
     }
     xhr.send();
+}
+function grabUserAvatar(username){
+    const avatarImg = document.querySelector('#avatar');
+    const imageXhr = new XMLHttpRequest();
+    // https://api.github.com/users/abrahammehari
+    // parse avatar_url from json -> this is the image address
+    const imageUrl = `https://api.github.com/users/${username}`
+    console.log(imageUrl);
+    imageXhr.open('GET', imageUrl, true); // async
+    imageXhr.onload = function() {
+        const userInfo = JSON.parse(this.response);
+        console.log(userInfo);
+        avatarImg.setAttribute('src', userInfo['avatar_url']);
+    }
+    imageXhr.send();
 }
 function repoButtonMaker(eachTitle, eachDesc, eachLanguage, projectList) {
     const newRepo = document.createElement('button');
@@ -162,7 +178,6 @@ function drawEachGraph(eachRepo, eachGraph) {
     console.log(eachGraphPercentages);
     const drawDetails = chartData(container, eachGraphLangs, eachGraphPercentages, 'Proportions')
 }
-
 function chartData(ctx, labels, labelData, title) {
     return new Chart(ctx, {
         type: 'pie',
@@ -201,13 +216,16 @@ function chartData(ctx, labels, labelData, title) {
 }
 // public static void main ... lol
 // let githubUser = 'okalu';
-let githubUser = 'abrahammehari';
 // let githubUser = 'SagarNepali';
-
 // let githubUser = 'okonnu';
+// let githubUser = 'abrahammehari';
+let githubUser = 'torvalds';
+
 populateFields(githubUser);
 
 // make use of bubbling property of DOM elements
 
 // to work around api call limit, limit requests to only one.
 // once the entire logic is working, OAuth can be added.
+
+// grab the image from api and set it as a profile
