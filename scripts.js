@@ -1,3 +1,11 @@
+function takeUserInput() {
+    document.querySelector('form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(e.target).entries());
+        console.log(data.userId);
+        doesThisUserExist(data.userId);
+    });
+}
 function doesThisUserExist(username){
     const userXhr = new XMLHttpRequest();
     // https://api.github.com/users/abrahammehari
@@ -9,20 +17,43 @@ function doesThisUserExist(username){
         const data = JSON.parse(this.response);
         if(data['login'] != null){
             // violla
-            console.log(username + " => user exists")
+            console.log(username + " => user exists");
+            
+            // turn on display for header, main-chart, api-data, footer
+            // I should have just included it in one div
+            // wait you can still do it, who are we kidding, I am too lazy for that
+            manipulateDisplays();
+
             populateFields(username);
+            // return true;
         }else if (data['message'] === 'Not Found'){
             // message: "Not Found"
             // css tricks
-            console.log(username + "  => user doesn't exist")
+            console.log(username + "  => user doesn't exist");
+            // return false;
         }
         else{
             // Error 403 or other api denial
             console.log("Aww, snap!\nSomething went wrong!");
+            // return false;
         }
     }
     userXhr.send();
 }
+function manipulateDisplays() {
+    const header = document.querySelector('.header');
+    const mainChart = document.querySelector('#main-chart');
+    const apiData = document.querySelector('.api-data');
+    const footer = document.querySelector('.footer');
+    const takeInput = document.querySelector('.take-input');
+
+    header.style.display = 'flex';
+    mainChart.style.display = 'block';
+    apiData.style.display = 'flex';
+    footer.style.display = 'flex';
+    takeInput.style.display = 'none';
+}
+
 function populateFields(username){
     grabUserAvatar(username);
     let name = document.querySelector("#avatar-name");
@@ -252,8 +283,4 @@ let githubUser = 'torvalds';
 // make use of bubbling property of DOM elements
 // once the entire logic is working, OAuth can be added.
 
-document.querySelector('form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.target).entries());
-    console.log(data.userId);
-});
+takeUserInput();
