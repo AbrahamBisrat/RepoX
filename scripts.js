@@ -243,10 +243,17 @@ function chartData(ctx, labels, labelData, title) {
 // let githubUser = 'SagarNepali';
 // let githubUser = 'okonnu';
 // let githubUser = 'abrahammehari';
-// let githubUser = 'torvalds';
-let githubUser = 'meawfffff';
+let githubUser = 'torvalds';
+// let githubUser = 'meawfffff';
+// let githubUser = 'taniarascia';
 
 // doesThisUserExist(githubUser);
 
 // make use of bubbling property of DOM elements
 // once the entire logic is working, OAuth can be added.
+
+document.querySelector('form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target).entries());
+    console.log(data.userId);
+});
