@@ -128,7 +128,8 @@ function repoButtonMaker(eachTitle, eachDesc, eachLanguage, projectList) {
     newRepo.className = "collapsible";
     // check if title is valid(start with an alphabet)
     newRepo.innerText = eachTitle;
-    newRepo.innerText += "   >>   " + eachLanguage
+    if(eachLanguage != null && eachLanguage != 'null')
+        newRepo.innerText += "   >>   " + eachLanguage
     if (eachDesc != null && eachDesc != 'null')
         newRepo.innerText += "  :: " + eachDesc;
     projectList.appendChild(newRepo);
@@ -150,7 +151,7 @@ function repoContentMaker(eachUrl, hasPages, username, title) {
     repoContent.appendChild(graphContainer);
     repoContent.appendChild(repoLink);
     if(hasPages){
-        console.log("haspages");
+        // console.log("haspages");
         const pagesLink = document.createElement('a');
         pagesLink.href = `http://${username}.github.io/${title}/`;
         // https://username.github.io/repo-name/
@@ -310,11 +311,18 @@ function chartData(ctx, labels, labelData, title) {
 }
 function validateTitle(title){ 
     // make sure the id attributes being set are valid
-    // id=".identifier" should not be allowed b/c it 
+    // id=".identifier" should not be allowed b/c it
     // will pose a problem when accessing with JS
     // make a function that makes sure that the first 
     // char of the name is valid is an alphabet
-    return title.replace(/[^a-z]/gi, 'a');
+    // also replace if the first character happens to be 
+    // a number, replace it with a letter
+    title = title.replace(/[^0-9a-z]/gi, '');
+    if(title.charAt(0) <= '9' && title.charAt(0) >= '0'){
+        let replaceThisNumber = 65 + (Number(title.charAt(0)) % 26);
+        title =  String.fromCharCode(replaceThisNumber) + title.slice(1);
+    }
+    return title;
 }
 // let githubUser = 'okalu';
 // let githubUser = 'SagarNepali';
