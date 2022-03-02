@@ -279,6 +279,18 @@ function chartData(ctx, labels, labelData, title) {
         //     }
         // }
         options: {
+            scales: { // remove grid lines
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
             indexAxis: 'y',
             // Elements options apply to all of the options unless overridden in a dataset
             // In this case, we are setting the border of each horizontal bar to be 2px wide
@@ -297,7 +309,7 @@ function chartData(ctx, labels, labelData, title) {
                 display: true,
                 text: 'Language Breakdown'
               }
-            }
+            },
           }
     });
 }

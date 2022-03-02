@@ -73,7 +73,6 @@ body > * {
 }
 #main-chart{
     /* width: 50%; */
-    display: grid;
     place-content: center;
     display: none;
     justify-content: center;
