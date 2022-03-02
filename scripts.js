@@ -93,8 +93,8 @@ function populateFields(username){
             makeItCollapsible(newRepo);
             projectList.appendChild(repoContent);
             
-            // if(count++ > 1) // api call limit
-            //     break;
+            if(count++ > 0) // api call limit
+                break;
         }
         drawMainChart(username, listOfTitles);
     }
@@ -120,9 +120,9 @@ function repoButtonMaker(eachTitle, eachDesc, eachLanguage, projectList) {
     newRepo.type = "button";
     newRepo.className = "collapsible";
     newRepo.innerText = eachTitle;
-    newRepo.innerText += "   ::   " + eachLanguage
+    newRepo.innerText += "   >>   " + eachLanguage
     if (eachDesc != null || eachDesc != 'null')
-        newRepo.innerText += " : " + eachDesc;
+        newRepo.innerText += "  :: " + eachDesc;
     projectList.appendChild(newRepo);
     return newRepo;
 }
@@ -189,7 +189,6 @@ function drawMainChart(userURL, listOfRepo){
                     let temp = Number(graphData.get(index)) + Number(languagesList[index]);
                     console.log(index + " : appended result : " + temp);
                     graphData.set(index, temp);
-                    // break;
                     // if key already exists, add to the value
                 } else{
                     graphData.set(index, languagesList[index]);
@@ -206,6 +205,7 @@ function drawMainChart(userURL, listOfRepo){
     }
     
     // mapping data to percentage
+    // caution: smelly code ahead
     let lanTotal = 0;
     for(let val of graphData.values())
         lanTotal += Number(val);
@@ -271,13 +271,34 @@ function chartData(ctx, labels, labelData, title) {
                 borderWidth: 2
             }]
         },
+        // options: {
+        //     scales: {
+        //         y: {
+        //             beginAtZero: true
+        //         }
+        //     }
+        // }
         options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
+            indexAxis: 'y',
+            // Elements options apply to all of the options unless overridden in a dataset
+            // In this case, we are setting the border of each horizontal bar to be 2px wide
+            elements: {
+              bar: {
+                borderWidth: 2,
+              }
+            },
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false,
+                // position: 'left',
+              },
+              title: {
+                display: true,
+                text: 'Language Breakdown'
+              }
             }
-        }
+          }
     });
 }
 // let githubUser = 'okalu';
@@ -285,7 +306,7 @@ function chartData(ctx, labels, labelData, title) {
 // let githubUser = 'okonnu';
 // let githubUser = 'abrahammehari';
 // let githubUser = 'torvalds';
-// let githubUser = 'meawfffff';
+// let githubUser = 'meaw';
 // let githubUser = 'taniarascia';
 
 // make use of bubbling property of DOM elements

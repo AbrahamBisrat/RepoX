@@ -72,7 +72,7 @@ body > * {
     display: none;
 }
 #main-chart{
-    width: 50%;
+    /* width: 50%; */
     display: grid;
     place-content: center;
     display: none;
