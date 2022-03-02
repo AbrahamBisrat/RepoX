@@ -120,9 +120,10 @@ function repoButtonMaker(eachTitle, eachDesc, eachLanguage, projectList) {
     const newRepo = document.createElement('button');
     newRepo.type = "button";
     newRepo.className = "collapsible";
+    // check if title is valid(start with an alphabet)
     newRepo.innerText = eachTitle;
     newRepo.innerText += "   >>   " + eachLanguage
-    if (eachDesc != null || eachDesc != 'null')
+    if (eachDesc != null && eachDesc != 'null')
         newRepo.innerText += "  :: " + eachDesc;
     projectList.appendChild(newRepo);
     return newRepo;
@@ -136,14 +137,14 @@ function repoContentMaker(eachUrl, hasPages, username, title) {
     const graphContainer = document.createElement('div');
     graphContainer.setAttribute('id', title);
     const canvas = document.createElement('canvas');
-    canvas.setAttribute('id', `${title}-canvas`);
+    canvas.setAttribute('id', `${validateTitle(title)}-canvas`);
     canvas.setAttribute('width', '100%');
     canvas.setAttribute('height', '100%');
     graphContainer.appendChild(canvas);
     repoContent.appendChild(graphContainer);
     repoContent.appendChild(repoLink);
     if(hasPages){
-        console.log("haspages")
+        console.log("haspages");
         const pagesLink = document.createElement('a');
         pagesLink.href = `http://${username}.github.io/${title}/`;
         // https://username.github.io/repo-name/
@@ -216,20 +217,18 @@ function drawMainChart(userURL, listOfRepo){
     let labelData = [];
     for(let value of graphData.values())
         labelData.push(value);
-    // console.log("Labels");
-    // console.log(labels);
     const mainChart = chartData(ctx, labels, labelData, 'Language Breakdown');
 }
 function drawEachGraph(eachRepo, eachGraph) {
     // graphContainer.setAttribute('id', `${title}-canvas`);
-    const container = document.querySelector(`#${eachRepo}-canvas`);
-
-    const details = document.createElement('p');
-    for (let key of eachGraph.keys()) {
-        // console.log("e: " + key + "  :  " + eachGraph.get(key));
-        details.innerText += key + "  :  " + eachGraph.get(key) + "\n";
-    }
-    container.appendChild(details);
+    const container = document.querySelector(`#${validateTitle(eachRepo)}-canvas`);
+    // console.log("trying to build on " + validateTitle(eachRepo));
+    // const details = document.createElement('p');
+    // for (let key of eachGraph.keys()) {
+    //     // console.log("e: " + key + "  :  " + eachGraph.get(key));
+    //     details.innerText += key + "  :  " + eachGraph.get(key) + "\n";
+    // }
+    // container.appendChild(details);
     
     let eachGraphLangs = [];
     let eachGraphPercentages = [];
@@ -237,10 +236,6 @@ function drawEachGraph(eachRepo, eachGraph) {
         eachGraphLangs.push(key);
         eachGraphPercentages.push(eachGraph.get(key));
     }
-    // console.log("canvas : " + container);
-    // console.log("Each chart data : ");
-    // console.log(eachGraphLangs);
-    // console.log(eachGraphPercentages);
     const drawDetails = chartData(container, eachGraphLangs, eachGraphPercentages, 'Proportions')
 }
 function chartData(ctx, labels, labelData, title) {
@@ -312,6 +307,10 @@ function chartData(ctx, labels, labelData, title) {
           }
     });
 }
+function validateTitle(title){ // remove invalid characters from the whole content
+    // console.log(title + " > " + title.replace(/[^a-z]/gi, ''));
+    return title.replace(/[^a-z]/gi, '');
+}
 // let githubUser = 'okalu';
 // let githubUser = 'SagarNepali';
 // let githubUser = 'okonnu';
@@ -324,3 +323,9 @@ function chartData(ctx, labels, labelData, title) {
 // once the entire logic is working, OAuth can be added.
 
 takeUserInput();
+
+// make sure the id attributes being set are valid
+// id=".identifier" should not be allowed b/c it 
+// will pose a problem when accessing with JS
+// make a function that makes sure that the first 
+// char of the name is valid is an alphabet
