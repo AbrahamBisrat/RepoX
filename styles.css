@@ -81,7 +81,7 @@ body > * {
 #main-chart canvas{
     /* background-color: #22518f; */
     margin: 0 auto;
-    height: 100%;
+    height: auto;
     /* width: 100%; */
 }
 .repo-content div canvas{

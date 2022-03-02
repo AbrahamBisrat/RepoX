@@ -277,12 +277,15 @@ function chartData(ctx, labels, labelData, title) {
                 x: {
                     grid: {
                         display: false
-                    }
+                    },
                 },
                 y: {
                     beginAtZero: true,
                     grid: {
                         display: false
+                    },
+                    ticks: {
+                        autoSkip: false,
                     }
                 },
             },
