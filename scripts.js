@@ -45,7 +45,7 @@ function doesThisUserExist(username){
             // Error 403 or other api denial
             console.log("Aww, snap!\nSomething went wrong!");
             console.log("Github api response limit has been reached.");
-            alert("Github Api call limit reached, try again later or change ip with proxy. &#128514;")
+            alert("Github Api call limit reached, try again later or change ip with proxy. 😂")
             return false;
         }
     }
@@ -271,13 +271,6 @@ function chartData(ctx, labels, labelData, title) {
                 borderWidth: 2
             }]
         },
-        // options: {
-        //     scales: {
-        //         y: {
-        //             beginAtZero: true
-        //         }
-        //     }
-        // }
         options: {
             scales: { // remove grid lines
                 x: {
@@ -286,10 +279,11 @@ function chartData(ctx, labels, labelData, title) {
                     }
                 },
                 y: {
+                    beginAtZero: true,
                     grid: {
                         display: false
                     }
-                }
+                },
             },
             indexAxis: 'y',
             // Elements options apply to all of the options unless overridden in a dataset
@@ -310,7 +304,8 @@ function chartData(ctx, labels, labelData, title) {
                 text: 'Language Breakdown'
               }
             },
-          }
+            maintainAspectRatio: false,
+        },
     });
 }
 function validateTitle(title){ 
@@ -319,7 +314,7 @@ function validateTitle(title){
     // will pose a problem when accessing with JS
     // make a function that makes sure that the first 
     // char of the name is valid is an alphabet
-    return title.replace(/[^a-z]/gi, '');
+    return title.replace(/[^a-z]/gi, 'a');
 }
 // let githubUser = 'okalu';
 // let githubUser = 'SagarNepali';
