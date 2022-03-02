@@ -239,9 +239,12 @@ function drawEachGraph(eachRepo, eachGraph) {
     
     let eachGraphLangs = [];
     let eachGraphPercentages = [];
+    let totalSum = 0;
+    for(let key of eachGraph.keys())
+        totalSum += eachGraph.get(key);
     for(let key of eachGraph.keys()){
         eachGraphLangs.push(key);
-        eachGraphPercentages.push(eachGraph.get(key));
+        eachGraphPercentages.push((eachGraph.get(key) / totalSum) * 100);
     }
     const drawDetails = chartData(container, eachGraphLangs, eachGraphPercentages, 'Proportions')
 }
@@ -286,6 +289,7 @@ function chartData(ctx, labels, labelData, title) {
                     },
                     ticks: {
                         autoSkip: false,
+                        minRotation: 20,
                     }
                 },
             },

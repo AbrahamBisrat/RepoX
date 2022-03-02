@@ -85,7 +85,7 @@ body > * {
     /* width: 100%; */
 }
 .repo-content div canvas{
-    height: 20vh;
+    height: 30vh;
 }
 .api-data > a,
 #listed-projects > li{
@@ -120,7 +120,8 @@ h3{
     font-size: 15px;
     box-shadow: 0px 0px 2px rgb(102, 101, 101);
     border-radius: 2px;
-    margin: 0 .5vh
+    margin: 0 .5vh;
+    /* height: auto; */
 }
 /* Add a background color to the button 
 if it is clicked on 
@@ -130,13 +131,14 @@ if it is clicked on
     color: rgb(63, 109, 128);
 }
 .repo-content{
-    margin-top: -.45%;
-    width: 99.2%;
+    margin: -.45% 0 1% 0;
+    width: 99%;
     padding: 0px auto;
     overflow: hidden;
     background-color: #b8c7ce;
     max-height: 0px;
     transition: max-height 0.2s ease-out;
+    height: auto;
 }
 .collapsible:after {
     content: '\02795'; /* Unicode character for "plus" sign (+) */
