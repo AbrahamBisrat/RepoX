@@ -22,7 +22,7 @@ function doesThisUserExist(username){
         const data = JSON.parse(this.response);
         if(data['login'] != null){
             // violla
-            console.log(username + " => user exists");
+            console.log(username + " => user Found");
             
             // turn on display for header, main-chart, api-data, footer
             // I should have just included it in one div
@@ -32,15 +32,20 @@ function doesThisUserExist(username){
             populateFields(username);
             return true;
         }else if (data['message'] === 'Not Found'){
-            // message: "Not Found"
-            // css tricks
-            console.log(username + "  => user doesn't exist");
+            console.log(username + "  => user not found");
+            let searchBar = document.querySelector('#user-input');
+            // turn the input field color redish
+            searchBar.style.border = '5px solid red';
+            // clear input field
+            searchBar.value = '';
+            searchBar.setAttribute('placeholder', 'type valid id');
             return false;
         }
         else{
             // Error 403 or other api denial
             console.log("Aww, snap!\nSomething went wrong!");
             console.log("Github api response limit has been reached.");
+            alert("Github Api call limit reached, try again later or change ip with proxy. lol")
             return false;
         }
     }
@@ -94,8 +99,8 @@ function populateFields(username){
             makeItCollapsible(newRepo);
             projectList.appendChild(repoContent);
             
-            if(count++ > 0) // api call limit
-                break;
+            // if(count++ > 0) // api call limit
+            //     break;
         }
         drawMainChart(username, listOfTitles);
     }
@@ -308,7 +313,6 @@ function chartData(ctx, labels, labelData, title) {
     });
 }
 function validateTitle(title){ // remove invalid characters from the whole content
-    // console.log(title + " > " + title.replace(/[^a-z]/gi, ''));
     return title.replace(/[^a-z]/gi, '');
 }
 // let githubUser = 'okalu';
