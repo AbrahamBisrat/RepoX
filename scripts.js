@@ -2,7 +2,7 @@ function takeUserInput() {
     document.querySelector('form').addEventListener('submit', (e) => {
         e.preventDefault();
         const data = Object.fromEntries(new FormData(e.target).entries());
-        console.log(data.userId);
+        // console.log(data.userId);
         if(!doesThisUserExist(data.userId)){
             // user doesn't exist message
             // set the search bar border redish
@@ -40,6 +40,7 @@ function doesThisUserExist(username){
         else{
             // Error 403 or other api denial
             console.log("Aww, snap!\nSomething went wrong!");
+            console.log("Github api response limit has been reached.");
             return false;
         }
     }
@@ -53,7 +54,7 @@ function manipulateDisplays() {
     const takeInput = document.querySelector('.take-input');
 
     header.style.display = 'flex';
-    mainChart.style.display = 'grid';
+    mainChart.style.display = 'flex';
     apiData.style.display = 'flex';
     footer.style.display = 'flex';
     takeInput.style.display = 'none';
@@ -81,7 +82,7 @@ function populateFields(username){
             const eachUrl = data[i].html_url;
             // if hasPages is true add a link to it.
             const hasPages = data[i].has_pages;
-            console.log("has_pages : " + hasPages);
+            // console.log("has_pages : " + hasPages);
             listOfTitles.push(eachTitle);
             const newRepo = repoButtonMaker(
                 data[i].name,
@@ -106,11 +107,11 @@ function grabUserAvatar(username){
     // https://api.github.com/users/abrahammehari
     // parse avatar_url from json -> this is the image address
     const imageUrl = `https://api.github.com/users/${username}`
-    console.log(imageUrl);
+    // console.log(imageUrl);
     imageXhr.open('GET', imageUrl, true); // async
     imageXhr.onload = function() {
         const userInfo = JSON.parse(this.response);
-        console.log(userInfo);
+        // console.log(userInfo);
         avatarImg.setAttribute('src', userInfo['avatar_url']);
     }
     imageXhr.send();
@@ -166,8 +167,8 @@ function drawMainChart(userURL, listOfRepo){
     const ctx = document.getElementById('user-languages');
     const xhrLan = new XMLHttpRequest();
     
-    console.log("repositories");
-    console.log(listOfRepo);
+    // console.log("repositories");
+    // console.log(listOfRepo);
     
     let graphData = new Map();
     let counting = 1;
@@ -177,30 +178,28 @@ function drawMainChart(userURL, listOfRepo){
         const urlLan = `https://api.github.com/repos/${userURL}/${eachRepo}/languages`;
         xhrLan.open('GET', urlLan, false); // pay attention to async
         
-        console.log("\n\n " + counting++ + " working on : " + eachRepo);
+        // console.log("\n\n " + counting++ + " working on : " + eachRepo);
         xhrLan.onload = function() {
             let languagesList = JSON.parse(this.response);
-            console.log(languagesList);
+            // console.log(languagesList);
             let eachGraph = new Map();
             for (const index in languagesList) {
-                console.log("Seriously excuting . . . ");
                 eachGraph.set(index, Number(languagesList[index]));
                 if(graphData.get(index)){
                     let temp = Number(graphData.get(index)) + Number(languagesList[index]);
-                    console.log(index + " : appended result : " + temp);
+                    // console.log(index + " : appended result : " + temp);
                     graphData.set(index, temp);
                     // if key already exists, add to the value
                 } else{
                     graphData.set(index, languagesList[index]);
-                    console.log("Added : " + index);
+                    // console.log("Added : " + index);
                 }
-                console.log("excuting ...");
             }
             // append chart to each element
             drawEachGraph(eachRepo, eachGraph);
         };
-        for(let key of graphData.keys())
-            console.log(key + " : " + graphData.get(key) + "\n");
+        // for(let key of graphData.keys())
+        //     console.log(key + " : " + graphData.get(key) + "\n");
         xhrLan.send();
     }
     
@@ -217,8 +216,8 @@ function drawMainChart(userURL, listOfRepo){
     let labelData = [];
     for(let value of graphData.values())
         labelData.push(value);
-    console.log("Labels");
-    console.log(labels);
+    // console.log("Labels");
+    // console.log(labels);
     const mainChart = chartData(ctx, labels, labelData, 'Language Breakdown');
 }
 function drawEachGraph(eachRepo, eachGraph) {
@@ -239,9 +238,9 @@ function drawEachGraph(eachRepo, eachGraph) {
         eachGraphPercentages.push(eachGraph.get(key));
     }
     // console.log("canvas : " + container);
-    console.log("Each chart data : ");
-    console.log(eachGraphLangs);
-    console.log(eachGraphPercentages);
+    // console.log("Each chart data : ");
+    // console.log(eachGraphLangs);
+    // console.log(eachGraphPercentages);
     const drawDetails = chartData(container, eachGraphLangs, eachGraphPercentages, 'Proportions')
 }
 function chartData(ctx, labels, labelData, title) {
