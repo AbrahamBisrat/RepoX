@@ -45,7 +45,7 @@ function doesThisUserExist(username){
             // Error 403 or other api denial
             console.log("Aww, snap!\nSomething went wrong!");
             console.log("Github api response limit has been reached.");
-            alert("Github Api call limit reached, try again later or change ip with proxy. lol")
+            alert("Github Api call limit reached, try again later or change ip with proxy. &#128514;")
             return false;
         }
     }
@@ -64,12 +64,13 @@ function manipulateDisplays() {
     footer.style.display = 'flex';
     takeInput.style.display = 'none';
 }
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 function populateFields(username){
     grabUserAvatar(username);
     let name = document.querySelector("#avatar-name");
-    name.innerText = "@" + username;
-    // fetch avatar image from api here
-    // document.getElementById("avatar").src = source of the image url ;
+    name.innerText = "@" + capitalizeFirstLetter(username);
     // more feature to display follower and following numbers
 
     const xhr = new XMLHttpRequest();
@@ -312,7 +313,12 @@ function chartData(ctx, labels, labelData, title) {
           }
     });
 }
-function validateTitle(title){ // remove invalid characters from the whole content
+function validateTitle(title){ 
+    // make sure the id attributes being set are valid
+    // id=".identifier" should not be allowed b/c it 
+    // will pose a problem when accessing with JS
+    // make a function that makes sure that the first 
+    // char of the name is valid is an alphabet
     return title.replace(/[^a-z]/gi, '');
 }
 // let githubUser = 'okalu';
@@ -327,9 +333,3 @@ function validateTitle(title){ // remove invalid characters from the whole conte
 // once the entire logic is working, OAuth can be added.
 
 takeUserInput();
-
-// make sure the id attributes being set are valid
-// id=".identifier" should not be allowed b/c it 
-// will pose a problem when accessing with JS
-// make a function that makes sure that the first 
-// char of the name is valid is an alphabet

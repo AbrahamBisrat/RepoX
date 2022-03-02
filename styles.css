@@ -1,6 +1,6 @@
 *{
     font-family:Verdana, Geneva, Tahoma, sans-serif;
-    box-shadow: 2px;
+    /* box-shadow: 2px; */
 }
 html{
     height: 100vh;
@@ -72,13 +72,16 @@ body > * {
     display: none;
 }
 #main-chart{
-    display: flex;
+    /* display: flex; */
     justify-content: center;
+    /* height: 50vh; */
     display: none;
 }
 #main-chart canvas{
-    margin: 0;
-    width: 20%;
+    /* background-color: #22518f; */
+    margin: 0 auto;
+    /* height: 100%; */
+    /* width: 20%; */
 }
 .api-data > a,
 #listed-projects > li{
@@ -175,9 +178,9 @@ form{
     height: auto;
 }
 input[type='text']{
-    width : 100%;
+    width : 70%;
     padding: 10px;
-    margin: 80px 10px 10px; /* gap between the h1 element */
+    margin: 80px auto 20px; /* gap between the h1 element */
     box-sizing: border-box;
     box-shadow: 2px 2px 4px white;
     border: 5px solid rgb(31, 48, 63);
@@ -188,8 +191,8 @@ input[type='text']{
     background-color: #ccc;
 }
 input[type='submit']{
-    height: 10vh;
-    width: 20%;
+    height: 7vh;
+    width: 31%;
     padding: 10px;
     margin: 10px;
     place-content: center;
