@@ -3,7 +3,12 @@ function takeUserInput() {
         e.preventDefault();
         const data = Object.fromEntries(new FormData(e.target).entries());
         console.log(data.userId);
-        doesThisUserExist(data.userId);
+        if(!doesThisUserExist(data.userId)){
+            // user doesn't exist message
+            // set the search bar border redish
+            // clear the input field
+            // const form = 
+        }
     });
 }
 function doesThisUserExist(username){
@@ -21,21 +26,21 @@ function doesThisUserExist(username){
             
             // turn on display for header, main-chart, api-data, footer
             // I should have just included it in one div
-            // wait you can still do it, who are we kidding, I am too lazy for that
+            // wait you can still do it, who am I kidding, I am too lazy for that
             manipulateDisplays();
 
             populateFields(username);
-            // return true;
+            return true;
         }else if (data['message'] === 'Not Found'){
             // message: "Not Found"
             // css tricks
             console.log(username + "  => user doesn't exist");
-            // return false;
+            return false;
         }
         else{
             // Error 403 or other api denial
             console.log("Aww, snap!\nSomething went wrong!");
-            // return false;
+            return false;
         }
     }
     userXhr.send();
@@ -48,12 +53,11 @@ function manipulateDisplays() {
     const takeInput = document.querySelector('.take-input');
 
     header.style.display = 'flex';
-    mainChart.style.display = 'block';
+    mainChart.style.display = 'grid';
     apiData.style.display = 'flex';
     footer.style.display = 'flex';
     takeInput.style.display = 'none';
 }
-
 function populateFields(username){
     grabUserAvatar(username);
     let name = document.querySelector("#avatar-name");
@@ -89,8 +93,8 @@ function populateFields(username){
             makeItCollapsible(newRepo);
             projectList.appendChild(repoContent);
             
-            if(count++ > 1) // api call limit
-                break;
+            // if(count++ > 1) // api call limit
+            //     break;
         }
         drawMainChart(username, listOfTitles);
     }
@@ -116,8 +120,8 @@ function repoButtonMaker(eachTitle, eachDesc, eachLanguage, projectList) {
     newRepo.type = "button";
     newRepo.className = "collapsible";
     newRepo.innerText = eachTitle;
-    newRepo.innerText += " -> " + eachLanguage
-    if (eachDesc != null)
+    newRepo.innerText += "   ::   " + eachLanguage
+    if (eachDesc != null || eachDesc != 'null')
         newRepo.innerText += " : " + eachDesc;
     projectList.appendChild(newRepo);
     return newRepo;
@@ -171,7 +175,7 @@ function drawMainChart(userURL, listOfRepo){
         // xhr('method', 'url', 'async')
         // set async to false to get all the responses, instead of just the last request.
         const urlLan = `https://api.github.com/repos/${userURL}/${eachRepo}/languages`;
-        xhrLan.open('GET', urlLan, false);
+        xhrLan.open('GET', urlLan, false); // pay attention to async
         
         console.log("\n\n " + counting++ + " working on : " + eachRepo);
         xhrLan.onload = function() {
@@ -179,20 +183,25 @@ function drawMainChart(userURL, listOfRepo){
             console.log(languagesList);
             let eachGraph = new Map();
             for (const index in languagesList) {
+                console.log("Seriously excuting . . . ");
                 eachGraph.set(index, Number(languagesList[index]));
-                if(graphData.get(index) !== undefined){
+                if(graphData.get(index)){
                     let temp = Number(graphData.get(index)) + Number(languagesList[index]);
                     console.log(index + " : appended result : " + temp);
                     graphData.set(index, temp);
-                    break;
-                } // if key already exists, add to the value
-                graphData.set(index, languagesList[index]);
+                    // break;
+                    // if key already exists, add to the value
+                } else{
+                    graphData.set(index, languagesList[index]);
+                    console.log("Added : " + index);
+                }
+                console.log("excuting ...");
             }
             // append chart to each element
             drawEachGraph(eachRepo, eachGraph);
         };
-        // for(let key of graphData.keys())
-        //     console.log(key + " : " + graphData.get(key) + "\n");
+        for(let key of graphData.keys())
+            console.log(key + " : " + graphData.get(key) + "\n");
         xhrLan.send();
     }
     
@@ -208,7 +217,8 @@ function drawMainChart(userURL, listOfRepo){
     let labelData = [];
     for(let value of graphData.values())
         labelData.push(value);
-
+    console.log("Labels");
+    console.log(labels);
     const mainChart = chartData(ctx, labels, labelData, 'Language Breakdown');
 }
 function drawEachGraph(eachRepo, eachGraph) {
@@ -217,7 +227,7 @@ function drawEachGraph(eachRepo, eachGraph) {
 
     const details = document.createElement('p');
     for (let key of eachGraph.keys()) {
-        console.log("e: " + key + "  :  " + eachGraph.get(key));
+        // console.log("e: " + key + "  :  " + eachGraph.get(key));
         details.innerText += key + "  :  " + eachGraph.get(key) + "\n";
     }
     container.appendChild(details);
@@ -228,7 +238,7 @@ function drawEachGraph(eachRepo, eachGraph) {
         eachGraphLangs.push(key);
         eachGraphPercentages.push(eachGraph.get(key));
     }
-    console.log("canvas : " + container);
+    // console.log("canvas : " + container);
     console.log("Each chart data : ");
     console.log(eachGraphLangs);
     console.log(eachGraphPercentages);
@@ -236,7 +246,7 @@ function drawEachGraph(eachRepo, eachGraph) {
 }
 function chartData(ctx, labels, labelData, title) {
     return new Chart(ctx, {
-        type: 'pie',
+        type: 'bar',
         data: {
             labels: labels,
             datasets: [{
@@ -274,11 +284,9 @@ function chartData(ctx, labels, labelData, title) {
 // let githubUser = 'SagarNepali';
 // let githubUser = 'okonnu';
 // let githubUser = 'abrahammehari';
-let githubUser = 'torvalds';
+// let githubUser = 'torvalds';
 // let githubUser = 'meawfffff';
 // let githubUser = 'taniarascia';
-
-// doesThisUserExist(githubUser);
 
 // make use of bubbling property of DOM elements
 // once the entire logic is working, OAuth can be added.

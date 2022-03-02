@@ -72,7 +72,16 @@ body > * {
     display: none;
 }
 #main-chart{
+    width: 50%;
+    display: grid;
+    place-content: center;
     display: none;
+    justify-content: center;
+}
+#main-chart canvas{
+    /* height: 50%; */
+    /* width: 50vw; */
+    margin: 0;
 }
 .api-data > a,
 #listed-projects > li{
@@ -134,10 +143,10 @@ if it is clicked on
 .active:after {
     content: "\2796"; /* Unicode character for "minus" sign (-) */
 }
-#user-languages{
+/* #user-languages{
     width: 70px;
     height: 50px;
-}
+} */
 /* style the repo names
    languages built with
  */
@@ -189,6 +198,8 @@ input[type='text']{
     text-align: center;
     font-weight: bolder;
     font-size: large;
+    background-color: #ccc;
+    /* color: white; */
 }
 input[type='submit']{
     height: 10vh;
