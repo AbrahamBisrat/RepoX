@@ -1,3 +1,3 @@
 #   GitHub repository viewer
 
-## https://abrahammehari.github.io/GitHub-Projects/
+## https://abrahammehari.github.io/RepoX/

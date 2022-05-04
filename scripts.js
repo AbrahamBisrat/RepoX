@@ -343,3 +343,7 @@ function validateTitle(title){
 // once the entire logic is working, OAuth can be added.
 
 takeUserInput();
+// there are pages to the api repos call result
+// https://api.github.com/users/google/repos?page=1\&per_page=90
+// pages can be listened to, and acted up on accordingly
+// check if page exists and get resources.
